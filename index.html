@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>For Siana💖</title>
+
+  <style>
+    body {
+      height: 100vh;
+      background: linear-gradient(#ffb6c1, #ffc0cb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .box {
+      text-align: center;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      color: #b30059;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    #yes {
+      background: red;
+      color: white;
+    }
+
+    #no {
+      position: absolute;
+      background: white;
+    }
+
+    /* ❤️ Floating hearts */
+    .heart {
+      position: absolute;
+      color: red;
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+      20% { opacity: 0.7; }
+      100% {
+        transform: translateY(-10vh);
+        opacity: 0;
+      }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body onclick="startMusic()">
+
+<canvas id="confetti"></canvas>
+
+<div class="box">
+  <h1>Siana 💖<br>Will you be my Valentine?</h1>
+  <button id="yes" onclick="startMusic(); yes()">Yes 😍</button>
+  <button id="no">No 🙄</button>
+</div>
+
+<!-- 🎶 Background Music -->
+<audio id="music" loop preload="auto">
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_1fbe3b2a9b.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const noBtn = document.getElementById("no");
+  const music = document.getElementById("music");
+  let musicStarted = false;
+
+  function move() {
+    noBtn.style.left = Math.random() * (window.innerWidth - 120) + "px";
+    noBtn.style.top = Math.random() * (window.innerHeight - 60) + "px";
+  }
+
+  noBtn.addEventListener("mouseover", move);
+  noBtn.addEventListener("touchstart", move);
+
+ function startMusic() {
+  if (!musicStarted) {
+    music.volume = 0.4;
+    music.play().catch(() => {});
+    musicStarted = true;
+
+    }
+  }
+
+  /* ❤️ Floating hearts */
+  function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 15 + "px";
+    heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 7000);
+  }
+  setInterval(createHeart, 300);
+
+  /* 🎉 CONFETTI */
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let confetti = [];
+
+  function launchConfetti() {
+    confetti = [];
+    for (let i = 0; i < 200; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 5 + 5,
+        color: `hsl(${Math.random() * 360},100%,50%)`
+      });
+    }
+    animateConfetti();
+  }
+
+  function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach(c => {
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fillStyle = c.color;
+      ctx.fill();
+      c.y += c.d;
+    });
+    confetti = confetti.filter(c => c.y < canvas.height);
+    if (confetti.length > 0) requestAnimationFrame(animateConfetti);
+  }
+
+  function yes() {
+    launchConfetti();
+    document.querySelector(".box").innerHTML =
+      "<h1 style='color:red;'>YAYYY 💕🥰<br>Happy Valentines Day (in advance) 💖</h1>";
+  }
+</script>
+
+</body>
+</html>
